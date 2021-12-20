@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "ts-node ./src/Main.ts"
+  },
   "dependencies": {
     "@types/node": "^17.0.1",
     "ts-node": "^10.4.0",
