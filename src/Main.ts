@@ -16,7 +16,7 @@ function tryCatchFinally({
     try{
         tryReturn = tryFunc(tryParams);
     } catch(e){
-        console.error(e);
+        console.error(new String(e));
         catchReturn = catchFunc(catchParams);
     } finally{
         finallyReturn = finallyFunc(finallyParams);
@@ -29,10 +29,12 @@ function tryCatchFinally({
 }
 
 function mkdir(path: string) {
+    console.log(`Make dir ${path}`);
     execSync(`mkdir -p ${path}`).toString();
 }
 
 function rm(path: string) {
+    console.log(`Remove ${path}`);
     execSync(`rm -rf ${path}`).toString();
 }
 
@@ -40,6 +42,7 @@ function symbolicLink({
     target,
     link
 }:any){
+    console.log(`Create symbolic link ${link} => ${target}`);
     return execSync(`ln -sf ${target} ${link}`).toString();
 }
 
@@ -49,7 +52,7 @@ const findAppManifestsCommand: string = `find ${steamAppsPath} -name 'appmanifes
 const appManifestPaths: string[] = execSync(findAppManifestsCommand).toString().split('\n');
 const result:any = appManifestPaths.map((appManifestPath: string) => {
     const fileName: string = (function (p: string): string {
-        return p.substring(p.lastIndexOf('/'), p.length);
+        return p.substring(p.lastIndexOf('/') + 1, p.length);
     })(appManifestPath);
     const directoryPath: string = (function (p: string): string {
         return p.substring(0, p.lastIndexOf('/'));
@@ -76,4 +79,3 @@ const result:any = appManifestPaths.map((appManifestPath: string) => {
     })
     return res;
 });
-console.log(result);
