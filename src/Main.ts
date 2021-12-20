@@ -46,6 +46,14 @@ function symbolicLink({
     return execSync(`ln -sf ${target} ${link}`).toString();
 }
 
+function cp({
+    src,
+    dst
+}:any){
+    console.log(`Copy ${src} => ${dst}`);
+    return execSync(`cp -Rf ${src} ${dst}`).toString();
+}
+
 const wineDefaultPrefixPath: string = '~/.wine';
 const steamAppsPath: string = '~/.local/share/Steam/steamapps/';
 const findAppManifestsCommand: string = `find ${steamAppsPath} -name 'appmanifest_*.acf' -exec echo {} \\\;`;
@@ -68,12 +76,20 @@ const result:any = appManifestPaths.map((appManifestPath: string) => {
         tryParams:compatdataPfxPath,
         finallyFunc:tryCatchFinally,
         finallyParams:{
-            tryFunc:rm,
-            tryParams:compatdataPfxPath,
-            finallyFunc:symbolicLink,
+            tryFunc:cp,
+            tryParams:{
+                src: compatdataPfxPath,
+                dst: wineDefaultPrefixPath
+            },
+            finallyFunc:tryCatchFinally,
             finallyParams:{
-                target:wineDefaultPrefixPath,
-                link:compatdataPfxPath
+                tryFunc:rm,
+                tryParams: compatdataPfxPath,
+                finallyFunc:symbolicLink,
+                finallyParams:{
+                    target:wineDefaultPrefixPath,
+                    link:compatdataPfxPath
+                }
             }
         },
     })
