@@ -49,7 +49,7 @@ function symbolicLink({
 const wineDefaultPrefixPath: string = '~/.wine';
 const steamAppsPath: string = '~/.local/share/Steam/steamapps/';
 const findAppManifestsCommand: string = `find ${steamAppsPath} -name 'appmanifest_*.acf' -exec echo {} \\\;`;
-const appManifestPaths: string[] = execSync(findAppManifestsCommand).toString().split('\n');
+const appManifestPaths: string[] = execSync(findAppManifestsCommand).toString().split('\n').filter((_)=>(_ != ''));
 const result:any = appManifestPaths.map((appManifestPath: string) => {
     const fileName: string = (function (p: string): string {
         return p.substring(p.lastIndexOf('/') + 1, p.length);
